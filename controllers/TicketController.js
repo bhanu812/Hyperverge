@@ -11,13 +11,23 @@ async function Create(req, res) {
 }
 
 //update a ticket, update open/closed and user_details
-// async function update(req, res) {
-//   let ticket = await Ticket.findOneAndUpdate({ seat_no: req.params.seat }, { $set: req.body }, { new: true });
-//   if (!ticket) {
+async function update(req, res) {
+  if(req.body.passenger){
+    let passenger = req.body.passenger;
+    passenger = await User.findOneAndUpdate({id:passenger.id},{$set:passenger},{new:true}); 
+    var passenger_id = passenger.id;
+  }
+  if(req.body.status){
+    var status = req.body.status;
+    if(status === 'open'){
+    var passenger_id = '';
+    }
+    var ticket = await Ticket.findOneAndUpdate({ seat_no: req.params.seat },{$set:{"status":status,"passenger":passenger_id} }, { new: true });
+  }
+  res.send(ticket);
+  
+}
 
-//   }
-//   if(req.body.passenger)
-// }
 
 // edit details of a user
 async function editDetail(req, res) {
