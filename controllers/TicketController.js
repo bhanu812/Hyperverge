@@ -11,11 +11,12 @@ async function update(req, res) {
     response.passenger =passenger;
   }
   if(req.body.status){
+    var passenger_id = req.body.passenger_id;
     var status = req.body.status;
     if(status === 'open'){
     var passenger_id = '';
     }
-    var ticket = await Ticket.findOneAndUpdate({ seat_no: req.params.seat },{$set:{"status":status,"passenger":passenger_id} }, { new: true });
+    var ticket = await Ticket.findOneAndUpdate({ seat_number: req.params.seat },{$set:{"status":status,"passenger":passenger_id} }, { new: true });
     response.ticket = ticket
   }
   res.send(response);
@@ -25,15 +26,17 @@ async function update(req, res) {
 
 // get the status of a ticket based on ticket_id
 async function userDetail(req, res) {
-  var ticket = await Ticket.findOne({ seat_no: req.params.seat},{status:1});
+  var ticket = await Ticket.findOne({ seat_number: req.params.seat});
   var user_id = ticket.passenger;
+  if(String(user_id).trim.length == 0)
+  return res.send("no passenger for the ticket");
   var user = await User.findOne({id:user_id});
-  res.send(user);
+  return res.send(user);
   
 }
 
 async function checkStatus(req, res) {
-  var ticket = await Ticket.findOne({ seat_no: req.params.seat},{status:1});
+  var ticket = await Ticket.findOne({ seat_number: req.params.seat},{status:1});
   res.send(ticket);
   
 }
@@ -59,7 +62,8 @@ async function getcloseTicket(req, res) {
 
 async function resetTicket(req, res) {
   var ticket = await Ticket.updateMany({},{$set:{"status":"open","passenger":''}},{ new: true });
-  res.send(ticket)
+  if(ticket)
+  return res.send('tickets reset')
   
 }
 

@@ -2,24 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    Create,
     update,
     checkStatus,
     getcloseTicket,
     getopenTicket,
     resetTicket,
-    editDetail,
+    userDetail,
     getDetail
 } = require("../controllers/TicketController");
 
-router.post('/ticket', Create);
-router.post('/ticket/:ticket_id', update);
-router.put('/user/:ticket_id', editDetail);
-router.get('/ticket/:ticket_id', checkStatus);
-router.get('/tickets/open', getopenTicket);
-router.get('/tickets/closed', getcloseTicket);
+router.put('/:seat', update);
+router.get('/user/:seat', userDetail);
+router.get('/status/:seat', checkStatus);
+router.get('/open', getopenTicket);
+router.get('/closed', getcloseTicket);
 router.get('/ticket/details/:ticket_id', getDetail);
-router.post('/tickets/reset', resetTicket);
+router.post('/reset', resetTicket);
 
 
 module.exports = router;
