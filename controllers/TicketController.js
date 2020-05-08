@@ -70,7 +70,7 @@ module.exports = {
   getcloseTicket,
   getDetail,
   resetTicket,
-  userDetails
+  userDetail
 
 
 }
