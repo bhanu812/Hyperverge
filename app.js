@@ -30,7 +30,7 @@ app.set('view engine', 'pug');
 app.use('/', appRoutes);
 
 
-app.get('/app', function (req, res) {
+app.get('/', function (req, res) {
   res.render('index');
 });
 

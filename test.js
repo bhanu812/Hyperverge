@@ -12,23 +12,9 @@ var should = chai.should(),
 assert = chai.assert,
 expect = chai.expect;
 
-var server = require('../app'),
-Model = require('../models/model');
+var server = require('./app')
 
 describe('Cruds', function(){
-	Model.collection.drop();
-	beforeEach(function(done){
-		var newData = new Model({
-			title: 'My title',
-		});
-    newData.save(function(err) {
-      done();
-    });
-  });
-	afterEach(function(done){
-		Model.collection.drop();
-		done();
-	});
 
   it('should return status 200 on homepage GET', function(done){
     chai.request(server)
