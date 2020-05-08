@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const auth=require("../middleware/auth");
+
 
 const {
     update,
@@ -17,7 +19,7 @@ router.get('/status/:seat', checkStatus);
 router.get('/open', getopenTicket);
 router.get('/closed', getcloseTicket);
 router.get('/ticket/details/:ticket_id', getDetail);
-router.post('/reset', resetTicket);
+router.post('/reset',auth, resetTicket);
 
 
 module.exports = router;

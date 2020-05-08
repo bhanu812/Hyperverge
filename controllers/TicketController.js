@@ -9,7 +9,7 @@ async function update(req, res) {
     let passenger = req.body.passenger;
     passenger = await User.findOneAndUpdate({ id: passenger.id }, { $set: passenger }, { new: true });
     if (!passenger) {
-      return res.status(HttpCodes.OK).send({
+      return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
         success: false, Response: [], message: "update is not successfull"
       })
     }
@@ -24,7 +24,7 @@ async function update(req, res) {
     }
     var ticket = await Ticket.findOneAndUpdate({ seat_number: req.params.seat }, { $set: { "status": status, "passenger": passenger_id } }, { new: true });
     if (!ticket) {
-      return res.status(HttpCodes.OK).send({
+      return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
         success: false, Response: {}, message: "Seat with a given number not exist"
       })
     }
@@ -38,15 +38,17 @@ async function update(req, res) {
 // get the status of a ticket based on ticket_id
 async function userDetail(req, res) {
   var ticket = await Ticket.findOne({ seat_number: req.params.seat });
-  if (!seat_number) {
-    return res.status(HttpCodes.OK).send({
+  if (!ticket) {
+    return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
       success: false, Response: [], message: "Seat with a given number not exist"
     })
   }
 
   var user_id = ticket.passenger;
   if (String(user_id).trim.length == 0)
-    return res.send("no passenger for the ticket");
+  return res.status(HttpCodes.BAD_REQUEST).send({
+    success: false, Response: [], message: "Seat with a given number not exist"
+  })
   var user = await User.findOne({ id: user_id });
   return res.status(HttpCodes.OK).send({ success: true, Response: user, message: 'fetch sucessfull' });
 
@@ -54,8 +56,8 @@ async function userDetail(req, res) {
 
 async function checkStatus(req, res) {
   var ticket = await Ticket.findOne({ seat_number: req.params.seat }, { status: 1 });
-  if (!seat_number) {
-    return res.status(HttpCodes.OK).send({
+  if (!ticket) {
+    return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
       success: false, Response: [], message: "Seat with a given number not exist"
     })
   }
@@ -67,8 +69,8 @@ async function checkStatus(req, res) {
 
 async function getDetail(req, res) {
   var ticket = await Ticket.findOne({ seat_no: req.params.seat });
-  if (!seat_number) {
-    return res.status(HttpCodes.OK).send({
+  if (!ticket) {
+    return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
       success: false, Response: [], message: "Seat with a given number not exist"
     })
   }
@@ -80,8 +82,8 @@ async function getDetail(req, res) {
 // get list of all open tickets
 async function getopenTicket(req, res) {
   tickets = await Ticket.find({ status: "open" });
-  if (!seat_number) {
-    return res.status(HttpCodes.OK).send({
+  if (!tickets) {
+    return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
       success: false, Response: [], message: "Seat with a given number not exist"
     })
   }
@@ -93,8 +95,8 @@ async function getopenTicket(req, res) {
 // get list of all closed tickets
 async function getcloseTicket(req, res) {
   tickets = await Ticket.find({ status: "closed" });
-  if (!seat_number) {
-    return res.status(HttpCodes.OK).send({
+  if (!tickets) {
+    return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
       success: false, Response: [], message: "Seat with a given number not exist"
     })
   }
@@ -108,7 +110,7 @@ async function getcloseTicket(req, res) {
 async function resetTicket(req, res) {
   var ticket = await Ticket.updateMany({}, { $set: { "status": "open", "passenger": '' } }, { new: true });
   if (ticket)
-    return res.status(HttpCodes.OK).send({ success: true, message: "tickets reset" });
+  return res.status(HttpCodes.OK).send({ success: true, message: "tickets reset" });
 
 }
 
