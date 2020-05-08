@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const logger = require('express-logger');
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cors = require('cors');
@@ -11,9 +11,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-app.use(logger({
-  path: 'log/express.log'
-}));
+app.use(logger('dev'));
 app.use(cookieParser());
 app.use(session({
   secret: 'secret',
