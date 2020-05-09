@@ -18,7 +18,7 @@ router.get('/user/:seat', userDetail);
 router.get('/status/:seat', checkStatus);
 router.get('/open', getopenTicket);
 router.get('/closed', getcloseTicket);
-router.get('/ticket/details/:ticket_id', getDetail);
+router.get('/details/:seat', getDetail);
 router.post('/reset',auth, resetTicket);
 
 

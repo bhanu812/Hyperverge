@@ -1,8 +1,4 @@
 
-  
-process.env.NODE_ENV = 'test';
-
-var mongoose = require('mongoose'),
 chai = require('chai'),
 chaiHTTP = require('chai-http');
 chai.use(chaiHTTP);
@@ -46,4 +42,26 @@ describe('test', function(){
       res.body[0].should.have.property('_id');
     })
   }); 
+
+  it('GET seat status ', function(){
+    chai.request(server)
+    .get('/v1/api/ticket/status/1')
+    .then(function(err, res){
+      res.should.have.status(200);
+      res.should.be.json;
+      res.body.should.be.a('array');
+      res.body[0].should.have.property('_id');
+    })
+  }); 
+
+  it('GET ticket details', function(){
+    chai.request(server)
+    .get('/v1/api/ticket/details/1')
+    .then(function(err, res){
+      res.should.have.status(200);
+      res.should.be.json;
+      res.body[0].should.have.property('_id');
+    })
+  }); 
+
 })
