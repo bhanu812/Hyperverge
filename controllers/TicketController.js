@@ -13,6 +13,16 @@ async function update(req, res) {
       })
     }
     response.passenger = passenger;
+
+    var ticket = await Ticket.findOneAndUpdate({ seat_number: req.params.seat }, { $set: { "status": status, "passenger":''} }, { new: true });
+    if (!ticket) {
+      return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
+        success: false, Response: {}, message: "Seat with a given number not exist"
+      })
+    }
+    response.ticket = ticket
+
+    
   }
   if (req.body.status == 'open') {
     var status = req.body.status
