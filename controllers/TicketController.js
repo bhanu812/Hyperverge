@@ -5,24 +5,18 @@ const { HttpCodes, CustomErrors } = require('../response');
 
 async function update(req, res) {
   var response = {};
-  if (req.body.passenger) {
-    let passenger = req.body.passenger;
-    passenger = await User.findOneAndUpdate({ id: passenger.id }, { $set: passenger }, { new: true });
+  if (req.body.passenger && req.body.status == 'closed') {
+    passenger = await new User(req.body.passenger).save();
     if (!passenger) {
       return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
-        success: false, Response: [], message: "update is not successfull"
+        success: false, Response: [], message: "save is not successfull"
       })
     }
-    var passenger_id = passenger.id;
     response.passenger = passenger;
   }
-  if (req.body.status) {
-    var passenger_id = req.body.passenger_id;
-    var status = req.body.status;
-    if (status === 'open') {
-      var passenger_id = '';
-    }
-    var ticket = await Ticket.findOneAndUpdate({ seat_number: req.params.seat }, { $set: { "status": status, "passenger": passenger_id } }, { new: true });
+  if (req.body.status == 'open') {
+    var status = req.body.status
+    var ticket = await Ticket.findOneAndUpdate({ seat_number: req.params.seat }, { $set: { "status": status, "passenger":''} }, { new: true });
     if (!ticket) {
       return res.status(HttpCodes.INTERNAL_SERVER_ERROR).send({
         success: false, Response: {}, message: "Seat with a given number not exist"
@@ -30,7 +24,9 @@ async function update(req, res) {
     }
     response.ticket = ticket
   }
-
+  return res.status(HttpCodes.OK).send({
+    success: false, Response: response, message: "successfull"
+  })
 }
 
 
