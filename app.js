@@ -31,7 +31,7 @@ app.use('/', appRoutes);
 
 
 app.get('/', function (req, res) {
-  res.render('index');
+res.send('hello');
 });
 
 
